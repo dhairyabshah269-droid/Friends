@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Legendary Trio 🏆</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --accent: #fd79a8;
+            --dark: #2d3436;
+            --light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* Confetti Canvas */
+        #confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 100px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '🏆';
+            position: absolute;
+            font-size: 100px;
+            bottom: 50px;
+            left: 50px;
+            animation: bounce 2s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(10deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            color: white;
+            margin-bottom: 20px;
+            animation: slideUp 1s ease;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 30px;
+            animation: slideUp 1s ease 0.2s backwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cta-btn {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            background: white;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: slideUp 1s ease 0.4s backwards;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Secret Trophy Counter */
+        .trophy-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            font-weight: 600;
+            z-index: 99;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .trophy-counter:hover {
+            transform: scale(1.1);
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Members Section */
+        .members {
+            padding: 100px 50px;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 50px rgba(108, 92, 231, 0.2);
+        }
+
+        .card-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 20px;
+            transition: all 0.3s;
+        }
+
+        .card:hover .card-avatar {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .card .role {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .card .secret-tag {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+        }
+
+        .card:hover .secret-tag {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Vedant Special */
+        .vedant-card {
+            --primary: #e17055;
+            --accent: #fdcb6e;
+        }
+
+        .vedant-card::before {
+            background: linear-gradient(90deg, #e17055, #fdcb6e);
+        }
+
+        /* Priyansh Special */
+        .priyansh-card {
+            --primary: #00b894;
+            --accent: #55efc4;
+        }
+
+        .priyansh-card::before {
+            background: linear-gradient(90deg, #00b894, #55efc4);
+        }
+
+        /* Dhairya Special */
+        .dhairya-card {
+            --primary: #6c5ce7;
+            --accent: #a29bfe;
+        }
+
+        /* Ranji Trophy Section */
+        .ranji-section {
+            padding: 100px 50px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ranji-section h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        .ranji-section h2 span {
+            color: #ffd700;
+        }
+
+        .trophy-display {
+            font-size: 8rem;
+            animation: shine 2s ease-in-out infinite;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .trophy-display:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        @keyframes shine {
+            0%, 100% { filter: drop-shadow(0 0 20px #ffd700); }
+            50% { filter: drop-shadow(0 0 40px #ffd700); }
+        }
+
+        .ranji-text {
+            color: rgba(255,255,255,0.8);
+            font-size: 1.2rem;
+            margin-top: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .ranji-btn {
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-size: 1rem;
+            border: 2px solid #ffd700;
+            background: transparent;
+            color: #ffd700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .ranji-btn:hover {
+            background: #ffd700;
+            color: #1a1a2e;
+            transform: scale(1.05);
+        }
+
+        /* Fun Facts Section */
+        .fun-facts {
+            padding: 100px 50px;
+            background: #f8f9fa;
+        }
+
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .fact-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .fact-card:hover {
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .fact-card .emoji {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .fact-card h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        /* Secret Button */
+        .secret-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(108, 92, 231, 0.4);
+            transition: all 0.3s;
+            z-index: 99;
+        }
+
+        .secret-btn:hover {
+            transform: scale(1.1) rotate(180deg);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        footer .dev-credit {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .modal-content .modal-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            margin-top: 20px;
+            padding: 10px 30px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Easter Egg Styles */
+        .shake {
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px) rotate(-5deg); }
+            75% { transform: translateX(10px) rotate(5deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.5rem; }
+            nav { padding: 15px 20px; }
+            .nav-links { display: none; }
+            .members, .ranji-section, .fun-facts { padding: 60px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="confetti"></canvas>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo" onclick="easterEgg('logo')">TheLegends.io</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#squad">The Squad</a></li>
+            <li><a href="#ranji">🏆 Ranji</a></li>
+            <li><a href="#facts">Facts</a></li>
+        </ul>
+    </nav>
+
+    <!-- Trophy Counter -->
+    <div class="trophy-counter" onclick="addTrophy()">
+        🏆 Ranji Count: <span id="trophyCount">0</span>
+    </div>
+
+    <!-- Secret Button -->
+    <button class="secret-btn" onclick="secretSurprise()">🎲</button>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>The Legendary Trio 🔥</h1>
+            <p>Three bros, infinite chaos, and one shared dream of the Ranji Trophy 🏆</p>
+            <button class="cta-btn" onclick="showWelcome()">Enter If You Dare 😈</button>
+        </div>
+    </section>
+
+    <!-- Members Section -->
+    <section class="members" id="squad">
+        <h2 class="section-title">Meet The Squad</h2>
+        <div class="cards-container">
+            
+            <!-- Dhairya Card -->
+            <div class="card dhairya-card" onclick="cardClick('dhairya')">
+                <div class="card-avatar">👨‍💻</div>
+                <h3>Dhairya</h3>
+                <div class="role">The Developer 🚀</div>
+                <p>Created this masterpiece while Vedant and Priyansh were busy doing... well, nothing productive. The coding wizard who actually knows how computers work.</p>
+                <span class="secret-tag">🧠 Big Brain Energy</span>
+            </div>
+
+            <!-- Vedant Card -->
+            <div class="card vedant-card" onclick="cardClick('vedant')">
+                <div class="card-avatar">🏏</div>
+                <h3>Vedant</h3>
+                <div class="role">Sumit Bhai No Chokro 😎</div>
+                <p>The legendary "Sumit Bhai No Chokro"! Always ready with excuses and expert-level time pass. Ranji Trophy ka sapna aaj bhi zinda hai! 🏆</p>
+                <span class="secret-tag">🌟 Chokro of the Year</span>
+            </div>
+
+            <!-- Priyansh Card -->
+            <div class="card priyansh-card" onclick="cardClick('priyansh')">
+                <div class="card-avatar">💚</div>
+                <h3>Priyansh</h3>
+                <div class="role">Akshara's Biggest Fan 💕</div>
+                <p>When not thinking about Akshara, he's... wait, he's always thinking about Akshara! The romantic of the group with dreams bigger than his attention span.</p>
+                <span class="secret-tag">💘 Akshara Mode: ON</span>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Ranji Trophy Section -->
+    <section class="ranji-section" id="ranji">
+        <h2>The <span>Ranji Trophy</span> Dream 🏆</h2>
+        <div class="trophy-display" onclick="trophyClick()">🏆</div>
+        <p class="ranji-text">
+            Some chase dreams, some chase success... but these legends? 
+            They chase the Ranji Trophy! The inside joke that became a lifestyle. 
+            Click the trophy to add to your collection! 🏏
+        </p>
+        <button class="ranji-btn" onclick="ranjiCelebration()">
+            🎉 Celebrate Ranji Dreams
+        </button>
+    </section>
+
+    <!-- Fun Facts Section -->
+    <section class="fun-facts" id="facts">
+        <h2 class="section-title">Fun Facts 🎭</h2>
+        <div class="facts-grid">
+            <div class="fact-card" onclick="factClick(1)">
+                <div class="emoji">🏏</div>
+                <h4>Ranji References</h4>
+                <p>Used 1000+ times in conversations</p>
+            </div>
+            <div class="fact-card" onclick="factClick(2)">
+                <div class="emoji">💕</div>
+                <h4>Akshara Mentions</h4>
+                <p>Priyansh: "Just one more time..."</p>
+            </div>
+            <div class="fact-card" onclick="factClick(3)">
+                <div class="emoji">😎</div>
+                <h4>Chokro Moments</h4>
+                <p>Vedant being Sumit Bhai No Chokro: ∞</p>
+            </div>
+            <div class="fact-card" onclick="factClick(4)">
+                <div class="emoji">💻</div>
+                <h4>Code Written</h4>
+                <p>By Dhairya: This entire website!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 The Legendary Trio | All Rights Reserved (especially the Ranji jokes)</p>
+        <p class="dev-credit">
+            Crafted with ❤️ by <strong>Dhairya</strong> - The Only One Who Can Code 😏
+        </p>
+        <p style="margin-top: 10px; font-size: 0.8rem; opacity: 0.6;">
+            Vedant & Priyansh were moral support (they watched)
+        </p>
+    </footer>
+
+    <!-- Modals -->
+    <div class="modal" id="welcomeModal">
+        <div class="modal-content">
+            <div class="modal-emoji">🎉</div>
+            <h2>Welcome, Legend!</h2>
+            <p>You've entered the sacred space of The Trio. Prepare for inside jokes, Ranji Trophy dreams, and maximum chaos!</p>
+            <button class="close-modal" onclick="closeModal('welcomeModal')">Let's Gooo! 🚀</button>
+        </div>
+    </div>
+
+    <div class="modal" id="vedantModal">
+        <div class="modal-content">
+            <div class="modal-emoji">🏏</div>
+            <h2>Sumit Bhai No Chokro!</h2>
+            <p>Vedant has been summoned! Legend says when you say "Sumit Bhai No Chokro" three times, Vedant appears with Ranji Trophy dreams!</p>
+            <button class="close-modal" onclick="closeModal('vedantModal')">Respect 🙏</button>
+        </div>
+    </div>
+
+    <div class="modal" id="priyanshModal">
+        <div class="modal-content">
+            <div class="modal-emoji">💕</div>
+            <h2>Akshara Alert!</h2>
+            <p>You clicked on Priyansh! His heart rate just increased thinking someone mentioned Akshara. True love? More like True Obsession! 😂</p>
+            <button class="close-modal" onclick="closeModal('priyanshModal')">Cute but Pagal 💚</button>
+        </div>
+    </div>
+
+    <div class="modal" id="dhairyaModal">
+        <div class="modal-content">
+            <div class="modal-emoji">👨‍💻</div>
+            <h2>The Developer Speaks!</h2>
+            <p>Yes, I made this entire website while you two were busy with Ranji dreams and Akshara thoughts. You're welcome! 😎</p>
+            <button class="close-modal" onclick="closeModal('dhairyaModal')">Genius Alert! 🧠</button>
+        </div>
+    </div>
+
+    <div class="modal" id="ranjiModal">
+        <div class="modal-content">
+            <div class="modal-emoji">🏆🏆🏆</div>
+            <h2>RANJI TROPHY UNLOCKED!</h2>
+            <p>Just kidding! But hey, the dream is alive! Keep clicking, maybe one day it'll be real... probably not, but keep dreaming! 😂</p>
+            <button class="close-modal" onclick="closeModal('ranjiModal')">One Day! 🙏</button>
+        </div>
+    </div>
+
+    <div class="modal" id="secretModal">
+        <div class="modal-content">
+            <div class="modal-emoji" id="secretEmoji">🎲</div>
+            <h2 id="secretTitle">Secret Found!</h2>
+            <p id="secretText">You found a secret!</p>
+            <button class="close-modal" onclick="closeModal('secretModal')">Nice! 😄</button>
+        </div>
+    </div>
+
+    <script>
+        // Trophy Counter
+        let trophyCount = 0;
+
+        function addTrophy() {
+            trophyCount++;
+            document.getElementById('trophyCount').textContent = trophyCount;
+            
+            if (trophyCount === 10) {
+                showSecret("🏆", "10 Trophies!", "You're as obsessed with Ranji as the boys!");
+            } else if (trophyCount === 50) {
+                showSecret("🎖️", "50 Trophies!", "Vedant would be proud! Sumit Bhai No Chokro energy!");
+            } else if (trophyCount === 100) {
+                showSecret("👑", "100 TROPHIES!", "You're officially the Ranji Trophy Champion! Tell Vedant & Priyansh they lost!");
+                triggerConfetti();
+            }
+        }
+
+        function trophyClick() {
+            addTrophy();
+            const trophy = document.querySelector('.trophy-display');
+            trophy.classList.add('shake');
+            setTimeout(() => trophy.classList.remove('shake'), 500);
+        }
+
+        // Card Clicks
+        function cardClick(name) {
+            if (name === 'vedant') {
+                document.getElementById('vedantModal').style.display = 'flex';
+            } else if (name === 'priyansh') {
+                document.getElementById('priyanshModal').style.display = 'flex';
+            } else if (name === 'dhairya') {
+                document.getElementById('dhairyaModal').style.display = 'flex';
+            }
+        }
+
+        // Modals
+        function showWelcome() {
+            document.getElementById('welcomeModal').style.display = 'flex';
+            triggerConfetti();
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function showSecret(emoji, title, text) {
+            document.getElementById('secretEmoji').textContent = emoji;
+            document.getElementById('secretTitle').textContent = title;
+            document.getElementById('secretText').textContent = text;
+            document.getElementById('secretModal').style.display = 'flex';
+        }
+
+        // Ranji Celebration
+        function ranjiCelebration() {
+            document.getElementById('ranjiModal').style.display = 'flex';
+            triggerConfetti();
+        }
+
+        // Secret Surprises
+        const secrets = [
+            { emoji: "🏏", title: "Ranji Time!", text: "Vedant just got selected for Ranji! JK, keep dreaming! 😂" },
+            { emoji: "💕", title: "Akshara Called!", text: "She didn't actually, but Priyansh wishes she did!" },
+            { emoji: "👨‍💻", title: "Code Master!", text: "Dhairya is still the only one who can center a div!" },
+            { emoji: "🎭", title: "Plot Twist!", text: "None of them actually know how to play cricket properly!" },
+            { emoji: "😂", title: "Truth Bomb!", text: "This website took longer to make than their combined attention span!" },
+            { emoji: "🏆", title: "Breaking News!", text: "Ranji Trophy has filed a restraining order against this group!" },
+            { emoji: "💚", title: "Akshara Update!", text: "Priyansh's search history: 'How to impress Akshara' x1000" },
+            { emoji: "😎", title: "Chokro Alert!", text: "Sumit Bhai is proud of his Chokro! Maybe. We don't know Sumit Bhai." }
+        ];
+
+        function secretSurprise() {
+            const secret = secrets[Math.floor(Math.random() * secrets.length)];
+            showSecret(secret.emoji, secret.title, secret.text);
+        }
+
+        // Fact Cards
+        function factClick(num) {
+            const facts = {
+                1: { emoji: "🏏", title: "Ranji Fact!", text: "If Ranji Trophy references were currency, this group would be billionaires!" },
+                2: { emoji: "💕", title: "Akshara Fact!", text: "Priyansh's dream: A world where Akshara knows he exists 😂" },
+                3: { emoji: "😎", title: "Chokro Fact!", text: "Vedant IS Sumit Bhai No Chokro. No further explanation needed!" },
+                4: { emoji: "💻", title: "Dev Fact!", text: "Dhairya wrote this code faster than Vedant can spell 'JavaScript'!" }
+            };
+            const fact = facts[num];
+            showSecret(fact.emoji, fact.title, fact.text);
+        }
+
+        // Easter Eggs
+        function easterEgg(type) {
+            if (type === 'logo') {
+                showSecret("🔮", "Secret Logo Click!", "You found the secret! You're smarter than Vedant and Priyansh combined! (Low bar, but still!)");
+            }
+        }
+
+        // Confetti Effect
+        const confettiCanvas = document.getElementById('confetti');
+        const confettiCtx = confettiCanvas.getContext('2d');
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+
+        let confettiPieces = [];
+        let confettiActive = false;
+
+        class ConfettiPiece {
+            constructor() {
+                this.x = Math.random() * confettiCanvas.width;
+                this.y = Math.random() * confettiCanvas.height - confettiCanvas.height;
+                this.size = Math.random() * 10 + 5;
+                this.speedY = Math.random() * 3 + 2;
+                this.speedX = Math.random() * 2 - 1;
+                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 10 - 5;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotationSpeed;
+            }
+
+            draw() {
+                confettiCtx.save();
+                confettiCtx.translate(this.x, this.y);
+                confettiCtx.rotate(this.rotation * Math.PI / 180);
+                confettiCtx.fillStyle = this.color;
+                confettiCtx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size / 2);
+                confettiCtx.restore();
+            }
+        }
+
+        function triggerConfetti() {
+            confettiPieces = [];
+            for (let i = 0; i < 150; i++) {
+                confettiPieces.push(new ConfettiPiece());
+            }
+            if (!confettiActive) {
+                confettiActive = true;
+                animateConfetti();
+            }
+        }
+
+        function animateConfetti() {
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            
+            confettiPieces = confettiPieces.filter(p => p.y < confettiCanvas.height);
+            
+            confettiPieces.forEach(piece => {
+                piece.update();
+                piece.draw();
+            });
+
+            if (confettiPieces.length > 0) {
+                requestAnimationFrame(animateConfetti);
+            } else {
+                confettiActive = false;
+            }
+        }
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        });
+
+        // Konami Code Easter Egg
+        let konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    showSecret("🎮", "KONAMI CODE!", "You absolute legend! You know the sacred code! Vedant & Priyansh could never! 🎉");
+                    triggerConfetti();
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        // Triple click easter egg on body
+        let clickCount = 0;
+        let clickTimer;
+
+        document.body.addEventListener('click', () => {
+            clickCount++;
+            clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => {
+                if (clickCount >= 5) {
+                    showSecret("🤯", "CLICK MASTER!", "5 clicks?! You're more dedicated than Priyansh is to Akshara!");
+                }
+                clickCount = 0;
+            }, 500);
+        });
+    </script>
+</body>
+</html>
